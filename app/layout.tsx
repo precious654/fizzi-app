@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
-import localFont from 'next/font/local'
+import localFont from "next/font/local";
 import { Montserrat, Poppins, Nunito } from "next/font/google";
+
+import { Header } from "@/components/Header";
 import "./globals.css";
 
 const nunito = Nunito({
@@ -31,13 +33,13 @@ const avalors = localFont({
   src: "./fonts/Avalors-Personal-Use-Only.woff",
   variable: "--font-avalors",
   display: "swap",
-})
+});
 
 const meadow = localFont({
   src: "./fonts/Meadow-Free.woff",
   variable: "--font-meadow",
   display: "swap",
-})
+});
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -52,9 +54,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${nunito.variable} ${montserrat.variable} ${poppins.variable} ${meadow.variable} ${avalors.variable} antialiased font-avalors font-medium`}
+        className={`${nunito.variable} ${montserrat.variable} ${poppins.variable} ${meadow.variable} ${avalors.variable} font-avalors font-medium antialiased overflow-x-hidden bg-yellow-300`}
       >
-        {children}
+        <Header />
+        <main>{children}</main>
       </body>
     </html>
   );
