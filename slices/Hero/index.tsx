@@ -1,15 +1,18 @@
+"use client";
+
 import { FC } from "react";
 import { asText, Content } from "@prismicio/client";
-import {
-  SliceComponentProps,
-  PrismicRichText,
-  PrismicText,
-} from "@prismicio/react";
-import { PrismicNextImage, PrismicNextLink } from "@prismicio/next";
+import { SliceComponentProps, PrismicRichText } from "@prismicio/react";
+import { PrismicNextImage } from "@prismicio/next";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import { Bounded } from "@/components/Bounded";
 import { Button } from "@/components/Button";
+import { TextSplitter } from "@/components/TextSplitter";
 
+gsap.registerPlugin(useGSAP, ScrollTrigger);
 /**
  * Props for `Hero`.
  */
@@ -19,17 +22,88 @@ export type HeroProps = SliceComponentProps<Content.HeroSlice>;
  * Component for "Hero" Slices.
  */
 const Hero: FC<HeroProps> = ({ slice }) => {
+  useGSAP(() => {
+    const introTl = gsap.timeline();
+
+    introTl
+      .set(".hero", {
+        opacity: 1,
+      })
+      .from(".hero-header-word", {
+        scale: 3,
+        opacity: 0,
+        ease: "power4.in",
+        delay: 0.3,
+        stagger: 1,
+      })
+      .from(
+        ".hero-subheading",
+        {
+          opacity: 0,
+          y: 30,
+        },
+        "+=0.8",
+      )
+      .from(".hero-body", {
+        opacity: 0,
+        y: 10,
+      })
+      .from(".hero-button", {
+        opacity: 0,
+        y: 10,
+        duration: 0.6,
+      });
+
+    const scrollTl = gsap.timeline({
+      scrollTrigger: {
+        trigger: ".hero",
+        start: "top top",
+        end: "bottom bottom",
+        scrub: 1.5,
+      },
+    });
+
+    scrollTl
+      .fromTo(
+        "body",
+        {
+          backgroundColor: "#FDE047",
+        },
+        {
+          backgroundColor: "#FA8BC4",
+          overwrite: "auto",
+        },
+        1,
+      )
+      .from(".text-side-heading .split-char", {
+        scale: 1.3,
+        y: 40,
+        rotate: -25,
+        opacity: 0,
+        stagger: 0.1,
+        ease: "back.out(3)",
+        duration: 0.3,
+      })
+      .from(".text-side-body", {
+        y: 20,
+        opacity: 0,
+      });
+  }, []);
   return (
     <Bounded
       data-slice-type={slice.slice_type}
       data-slice-variation={slice.variation}
-      className="mt-10"
+      className="hero opacity-0"
     >
       <div className="grid">
         <div className="grid h-screen place-items-center">
           <div className="grid auto-rows-min place-items-center text-center">
-            <h1 className="hero-header text-7xl font-black uppercase leading-[.8] text-orange-500 md:text-[9rem] lg:text-[13rem]">
-              {asText(slice.primary.heading)}
+            <h1 className="hero-header text-7xl font-black uppercase leading-[.8] text-orange-500 md:text-[9rem] lg:text-[12rem]">
+              <TextSplitter
+                text={asText(slice.primary.heading)}
+                wordDisplayStyle="block"
+                className="hero-header-word"
+              />
             </h1>
             <div className="hero-subheading mt-12 font-meadow text-5xl text-sky-950 lg:text-6xl">
               <PrismicRichText field={slice.primary.subheading} />
@@ -50,10 +124,10 @@ const Hero: FC<HeroProps> = ({ slice }) => {
             field={slice.primary.cans_image}
           />
           <div>
-            <h2 className="text-side-heading text-sky-950 text-balance font-montserrat text-6xl font-black uppercase lg:text-7xl">
-              <PrismicText field={slice.primary.second_heading} />
+            <h2 className="text-side-heading text-balance font-montserrat text-6xl font-black uppercase text-sky-950 lg:text-7xl">
+              <TextSplitter text={asText(slice.primary.second_heading)} />
             </h2>
-            <div className="text-side-body mt-4 max-w-2xl text-balance text-lg font-montserrat text-sky-950">
+            <div className="text-side-body mt-4 max-w-2xl text-balance font-montserrat text-lg text-sky-950">
               <PrismicRichText field={slice.primary.second_body} />
             </div>
           </div>
