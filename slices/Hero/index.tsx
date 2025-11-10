@@ -13,6 +13,8 @@ import { Bounded } from "@/components/Bounded";
 import { Button } from "@/components/Button";
 import { TextSplitter } from "@/components/TextSplitter";
 import { Scene } from "./Scene";
+import { Bubbles } from "./Bubbles";
+import { useStore } from "@/hooks/useStore";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 /**
@@ -24,7 +26,11 @@ export type HeroProps = SliceComponentProps<Content.HeroSlice>;
  * Component for "Hero" Slices.
  */
 const Hero: FC<HeroProps> = ({ slice }) => {
+  const ready = useStore((state) => state.ready);
+
   useGSAP(() => {
+    if(!ready) return;
+
     const introTl = gsap.timeline();
 
     introTl
@@ -90,7 +96,7 @@ const Hero: FC<HeroProps> = ({ slice }) => {
         y: 20,
         opacity: 0,
       });
-  }, []);
+  }, {dependencies: [ready]} );
   return (
     <Bounded
       data-slice-type={slice.slice_type}
@@ -99,6 +105,7 @@ const Hero: FC<HeroProps> = ({ slice }) => {
     >
       <View className="hero-scene pointer-events-none sticky top-0 z-50 -mt-[100vh] hidden h-screen w-screen md:block">
         <Scene />
+        <Bubbles count={300} speed={2} repeat={true} />
       </View>
 
 
