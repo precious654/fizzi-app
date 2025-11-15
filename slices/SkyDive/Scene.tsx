@@ -46,9 +46,7 @@ export function Scene({ sentence, flavor }: SkyDiveProps) {
     )
       return;
 
-    gsap.set(cloudsRef.current.position, {
-      z: 10,
-    });
+    gsap.set(cloudsRef.current.position, { z: 10 });
     gsap.set(canRef.current.position, {
       ...getXYPositions(-4),
     });
@@ -70,25 +68,25 @@ export function Scene({ sentence, flavor }: SkyDiveProps) {
     const DISTANCE = 15;
     const DURATION = 6;
 
-    gsap.set([cloud1Ref.current.position, cloud2Ref.current.position], {
+    gsap.set([cloud2Ref.current.position, cloud1Ref.current.position], {
       ...getXYPositions(DISTANCE),
     });
 
     gsap.to(cloud1Ref.current.position, {
-      x: `+=${getXPosition(DISTANCE * 2)}`,
-      y: `+=${getYPosition(DISTANCE * -2)}`,
-      duration: DURATION,
-      repeat: -1,
+      y: `+=${getYPosition(DISTANCE * 2)}`,
+      x: `+=${getXPosition(DISTANCE * -2)}`,
       ease: "none",
+      repeat: -1,
+      duration: DURATION,
     });
 
     gsap.to(cloud2Ref.current.position, {
-      x: `+=${getXPosition(DISTANCE * 2)}`,
-      y: `+=${getYPosition(DISTANCE * -2)}`,
-      duration: DURATION,
-      delay: DURATION / 2,
-      repeat: -1,
+      y: `+=${getYPosition(DISTANCE * 2)}`,
+      x: `+=${getXPosition(DISTANCE * -2)}`,
       ease: "none",
+      repeat: -1,
+      delay: DURATION / 2,
+      duration: DURATION,
     });
 
     const scrollTl = gsap.timeline({
@@ -107,20 +105,30 @@ export function Scene({ sentence, flavor }: SkyDiveProps) {
         overwrite: "auto",
         duration: 0.1,
       })
-      .to(
-        cloudsRef.current.position,
-        {
-          z: 0,
-          duration: 0.3,
-        },
-        0,
-      )
+      .to(cloudsRef.current.position, { z: 0, duration: 0.3 }, 0)
       .to(canRef.current.position, {
         x: 0,
         y: 0,
         duration: 0.3,
         ease: "back.out(1.7)",
-      });
+      })
+      .to(
+        wordsRef.current.children.map((word) => word.position),
+        {
+          keyframes: [
+            { x: 0, y: 0, z: -1 },
+            { ...getXYPositions(-7), z: -7 },
+          ],
+          stagger: 0.3,
+        },
+        0,
+      )
+      .to(canRef.current.position, {
+        ...getXYPositions(4),
+        duration: 0.5,
+        ease: "back.in(1.7)",
+      })
+      .to(cloudsRef.current.position, { z: 7, duration: 0.5 });
   });
 
   return (
@@ -132,16 +140,18 @@ export function Scene({ sentence, flavor }: SkyDiveProps) {
           rotationIntensity={0}
           floatIntensity={3}
           floatSpeed={3}
-        ></FloatingCan>
+        >
+          <pointLight intensity={30} color="#96C34A" decay={0.6} />
+        </FloatingCan>
       </group>
 
       <Clouds ref={cloudsRef}>
-        <Cloud ref={cloud1Ref} bounds={[10, 10, 2]} />
+        <Cloud ref={cloud1Ref} bounds={[10, 10, 2]} color="#FA8BC4" />
         <Cloud ref={cloud2Ref} bounds={[10, 10, 2]} />
       </Clouds>
 
       <group ref={wordsRef}>
-        {sentence && <ThreeText sentence={sentence} color="#F1BE49" />}
+        {sentence && <ThreeText sentence={sentence} color="#994B35" />}
       </group>
 
       <ambientLight intensity={0.5} color="#9DDEFA" />
