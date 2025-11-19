@@ -43,7 +43,7 @@ const AlternatingText: FC<AlternatingTextProps> = ({ slice }) => {
               <div
                 className={clsx(
                   index % 2 === 0 ? "col-start-1" : "md:col-start-2",
-                  "rounded-lg p-4 backdrop-blur-lg max-md:bg-white/30",
+                  "rounded-lg p-4 backdrop-blur-lg max-md:bg-white/30 max-md:w-screen",
                 )}
               >
                 <h2 className="text-balance font-montserrat text-6xl font-bold">
