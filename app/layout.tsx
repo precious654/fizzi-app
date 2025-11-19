@@ -5,6 +5,7 @@ import { Montserrat, Poppins, Nunito } from "next/font/google";
 import { Header } from "@/components/Header";
 import "./globals.css";
 import ViewCanvas from "@/components/ViewCanvas";
+import Footer from "@/components/Footer";
 
 const nunito = Nunito({
   variable: "--font-nunito",
@@ -62,6 +63,7 @@ export default function RootLayout({
           {children}
           <ViewCanvas />
         </main>
+        <Footer />
       </body>
     </html>
   );
